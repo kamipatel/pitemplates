@@ -1,0 +1,1638 @@
+{
+  "Resources": {
+    "TemplatedSecret3D98B577": {
+      "Type": "AWS::SecretsManager::Secret",
+      "Properties": {
+        "GenerateSecretString": {
+          "GenerateStringKey": "password",
+          "SecretStringTemplate": "{\"sfdcusername\":\"pboorgusername\",\"sfdcclientid\":\"conectedappclientid\",\"sfdcclientsecret\":\"conectedappsecret\"}"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/TemplatedSecret/Resource"
+      }
+    },
+    "pipackageusagelogB671637B": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true
+        },
+        "VersioningConfiguration": {
+          "Status": "Enabled"
+        }
+      },
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/pi-packageusagelog/Resource"
+      }
+    },
+    "pipackageusagesummary3218D674": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true
+        },
+        "VersioningConfiguration": {
+          "Status": "Enabled"
+        }
+      },
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/pi-packageusagesummary/Resource"
+      }
+    },
+    "pipackageusagesnapshotBA3F7D6D": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true
+        },
+        "VersioningConfiguration": {
+          "Status": "Enabled"
+        }
+      },
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/pi-packageusagesnapshot/Resource"
+      }
+    },
+    "pisummary540425EA": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true
+        },
+        "VersioningConfiguration": {
+          "Status": "Enabled"
+        }
+      },
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/pi-summary/Resource"
+      }
+    },
+    "PIVpc1CF2D9B3": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": "10.0.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "PicdkStack/PIVpc"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/PIVpc/Resource"
+      }
+    },
+    "PIVpcPublicSubnet1Subnet51B9A540": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.0.0/17",
+        "VpcId": {
+          "Ref": "PIVpc1CF2D9B3"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public"
+          },
+          {
+            "Key": "Name",
+            "Value": "PicdkStack/PIVpc/PublicSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/PIVpc/PublicSubnet1/Subnet"
+      }
+    },
+    "PIVpcPublicSubnet1RouteTable09F3BC05": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "PIVpc1CF2D9B3"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "PicdkStack/PIVpc/PublicSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/PIVpc/PublicSubnet1/RouteTable"
+      }
+    },
+    "PIVpcPublicSubnet1RouteTableAssociation8B8B989E": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "PIVpcPublicSubnet1RouteTable09F3BC05"
+        },
+        "SubnetId": {
+          "Ref": "PIVpcPublicSubnet1Subnet51B9A540"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/PIVpc/PublicSubnet1/RouteTableAssociation"
+      }
+    },
+    "PIVpcPublicSubnet1DefaultRoute10901C2B": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "PIVpcPublicSubnet1RouteTable09F3BC05"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "PIVpcIGW043B065C"
+        }
+      },
+      "DependsOn": [
+        "PIVpcVPCGW7FE810BC"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/PIVpc/PublicSubnet1/DefaultRoute"
+      }
+    },
+    "PIVpcPublicSubnet1EIP4E6F0288": {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "Domain": "vpc",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "PicdkStack/PIVpc/PublicSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/PIVpc/PublicSubnet1/EIP"
+      }
+    },
+    "PIVpcPublicSubnet1NATGatewayEB3546E1": {
+      "Type": "AWS::EC2::NatGateway",
+      "Properties": {
+        "AllocationId": {
+          "Fn::GetAtt": [
+            "PIVpcPublicSubnet1EIP4E6F0288",
+            "AllocationId"
+          ]
+        },
+        "SubnetId": {
+          "Ref": "PIVpcPublicSubnet1Subnet51B9A540"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "PicdkStack/PIVpc/PublicSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/PIVpc/PublicSubnet1/NATGateway"
+      }
+    },
+    "PIVpcPrivateSubnet1SubnetB1D9B3A9": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.128.0/17",
+        "VpcId": {
+          "Ref": "PIVpc1CF2D9B3"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Private"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private"
+          },
+          {
+            "Key": "Name",
+            "Value": "PicdkStack/PIVpc/PrivateSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/PIVpc/PrivateSubnet1/Subnet"
+      }
+    },
+    "PIVpcPrivateSubnet1RouteTable25E90C79": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "PIVpc1CF2D9B3"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "PicdkStack/PIVpc/PrivateSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/PIVpc/PrivateSubnet1/RouteTable"
+      }
+    },
+    "PIVpcPrivateSubnet1RouteTableAssociation37FF83EC": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "PIVpcPrivateSubnet1RouteTable25E90C79"
+        },
+        "SubnetId": {
+          "Ref": "PIVpcPrivateSubnet1SubnetB1D9B3A9"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/PIVpc/PrivateSubnet1/RouteTableAssociation"
+      }
+    },
+    "PIVpcPrivateSubnet1DefaultRouteA6C7A413": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "PIVpcPrivateSubnet1RouteTable25E90C79"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": {
+          "Ref": "PIVpcPublicSubnet1NATGatewayEB3546E1"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/PIVpc/PrivateSubnet1/DefaultRoute"
+      }
+    },
+    "PIVpcIGW043B065C": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "PicdkStack/PIVpc"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/PIVpc/IGW"
+      }
+    },
+    "PIVpcVPCGW7FE810BC": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "PIVpc1CF2D9B3"
+        },
+        "InternetGatewayId": {
+          "Ref": "PIVpcIGW043B065C"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/PIVpc/VPCGW"
+      }
+    },
+    "PiCluster1A71287C": {
+      "Type": "AWS::ECS::Cluster",
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/PiCluster/Resource"
+      }
+    },
+    "PIAppTaskRole722ACC80": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ecs-tasks.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+              ]
+            ]
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/AmazonS3FullAccess"
+              ]
+            ]
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSGlueServiceRole"
+              ]
+            ]
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/AmazonAthenaFullAccess"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/PIAppTaskRole-/Resource"
+      }
+    },
+    "LogToS3Task4B99BA78": {
+      "Type": "AWS::ECS::TaskDefinition",
+      "Properties": {
+        "ContainerDefinitions": [
+          {
+            "Environment": [
+              {
+                "Name": "REGION",
+                "Value": {
+                  "Ref": "AWS::Region"
+                }
+              },
+              {
+                "Name": "FARGATE_CLUSTER_NAME",
+                "Value": "PiCluster"
+              },
+              {
+                "Name": "FARGATE_TASK_DEF_NAME",
+                "Value": "LogPullTask"
+              },
+              {
+                "Name": "SUBNET_ID",
+                "Value": {
+                  "Ref": "PIVpcPrivateSubnet1SubnetB1D9B3A9"
+                }
+              },
+              {
+                "Name": "S3__USAGE_LOG_BUCKET",
+                "Value": {
+                  "Ref": "pipackageusagelogB671637B"
+                }
+              },
+              {
+                "Name": "S3__USAGE_SUMMARY_BUCKET",
+                "Value": {
+                  "Ref": "pipackageusagesummary3218D674"
+                }
+              },
+              {
+                "Name": "S3__USAGE_SNAPSHOT_BUCKET",
+                "Value": {
+                  "Ref": "pipackageusagesnapshotBA3F7D6D"
+                }
+              },
+              {
+                "Name": "S3__SUMMARY_BUCKET",
+                "Value": {
+                  "Ref": "pisummary540425EA"
+                }
+              }
+            ],
+            "Essential": true,
+            "Image": "public.ecr.aws/f8b3w7z4/pilabapp-pilogpulltaskdocker-repository:latest",
+            "LogConfiguration": {
+              "LogDriver": "awslogs",
+              "Options": {
+                "awslogs-group": {
+                  "Ref": "LogToS3TaskLogToS3TaskContainerLogGroup7D1BB92F"
+                },
+                "awslogs-stream-prefix": "PILogToS3Task",
+                "awslogs-region": {
+                  "Ref": "AWS::Region"
+                }
+              }
+            },
+            "Name": "LogToS3TaskContainer",
+            "Secrets": [
+              {
+                "Name": "SFDCSECRET",
+                "ValueFrom": {
+                  "Ref": "TemplatedSecret3D98B577"
+                }
+              }
+            ]
+          }
+        ],
+        "Cpu": "2048",
+        "ExecutionRoleArn": {
+          "Fn::GetAtt": [
+            "LogToS3TaskExecutionRole955B3727",
+            "Arn"
+          ]
+        },
+        "Family": "PicdkStackLogToS3Task38C04076",
+        "Memory": "10240",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": [
+          "FARGATE"
+        ],
+        "TaskRoleArn": {
+          "Fn::GetAtt": [
+            "PIAppTaskRole722ACC80",
+            "Arn"
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/LogToS3Task/Resource"
+      }
+    },
+    "LogToS3TaskLogToS3TaskContainerLogGroup7D1BB92F": {
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/LogToS3Task/LogToS3TaskContainer/LogGroup/Resource"
+      }
+    },
+    "LogToS3TaskExecutionRole955B3727": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ecs-tasks.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/LogToS3Task/ExecutionRole/Resource"
+      }
+    },
+    "LogToS3TaskExecutionRoleDefaultPolicy4A03906C": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "LogToS3TaskLogToS3TaskContainerLogGroup7D1BB92F",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": [
+                "secretsmanager:GetSecretValue",
+                "secretsmanager:DescribeSecret"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Ref": "TemplatedSecret3D98B577"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "LogToS3TaskExecutionRoleDefaultPolicy4A03906C",
+        "Roles": [
+          {
+            "Ref": "LogToS3TaskExecutionRole955B3727"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/LogToS3Task/ExecutionRole/DefaultPolicy/Resource"
+      }
+    },
+    "LogToS3TaskEventsRole80352D77": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "events.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/LogToS3Task/EventsRole/Resource"
+      }
+    },
+    "LogToS3TaskEventsRoleDefaultPolicy8D7ACBBB": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "ecs:RunTask",
+              "Condition": {
+                "ArnEquals": {
+                  "ecs:cluster": {
+                    "Fn::GetAtt": [
+                      "PiCluster1A71287C",
+                      "Arn"
+                    ]
+                  }
+                }
+              },
+              "Effect": "Allow",
+              "Resource": {
+                "Ref": "LogToS3Task4B99BA78"
+              }
+            },
+            {
+              "Action": "iam:PassRole",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "LogToS3TaskExecutionRole955B3727",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": "iam:PassRole",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "PIAppTaskRole722ACC80",
+                  "Arn"
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "LogToS3TaskEventsRoleDefaultPolicy8D7ACBBB",
+        "Roles": [
+          {
+            "Ref": "LogToS3TaskEventsRole80352D77"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/LogToS3Task/EventsRole/DefaultPolicy/Resource"
+      }
+    },
+    "LogToS3TaskSecurityGroupB5E3B757": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "PicdkStack/LogToS3Task/SecurityGroup",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1"
+          }
+        ],
+        "VpcId": {
+          "Ref": "PIVpc1CF2D9B3"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/LogToS3Task/SecurityGroup/Resource"
+      }
+    },
+    "logtos3ScheduleRule6045D2DC": {
+      "Type": "AWS::Events::Rule",
+      "Properties": {
+        "ScheduleExpression": "rate(1 day)",
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Fn::GetAtt": [
+                "PiCluster1A71287C",
+                "Arn"
+              ]
+            },
+            "EcsParameters": {
+              "LaunchType": "FARGATE",
+              "NetworkConfiguration": {
+                "AwsVpcConfiguration": {
+                  "AssignPublicIp": "DISABLED",
+                  "SecurityGroups": [
+                    {
+                      "Fn::GetAtt": [
+                        "LogToS3TaskSecurityGroupB5E3B757",
+                        "GroupId"
+                      ]
+                    }
+                  ],
+                  "Subnets": [
+                    {
+                      "Ref": "PIVpcPrivateSubnet1SubnetB1D9B3A9"
+                    }
+                  ]
+                }
+              },
+              "TaskCount": 1,
+              "TaskDefinitionArn": {
+                "Ref": "LogToS3Task4B99BA78"
+              }
+            },
+            "Id": "Target0",
+            "Input": "{}",
+            "RoleArn": {
+              "Fn::GetAtt": [
+                "LogToS3TaskEventsRole80352D77",
+                "Arn"
+              ]
+            }
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/logtos3ScheduleRule/Resource"
+      }
+    },
+    "S3SummaryTask99007529": {
+      "Type": "AWS::ECS::TaskDefinition",
+      "Properties": {
+        "ContainerDefinitions": [
+          {
+            "Environment": [
+              {
+                "Name": "REGION",
+                "Value": {
+                  "Ref": "AWS::Region"
+                }
+              },
+              {
+                "Name": "FARGATE_CLUSTER_NAME",
+                "Value": "PiCluster"
+              },
+              {
+                "Name": "FARGATE_TASK_DEF_NAME",
+                "Value": "LogPullTask"
+              },
+              {
+                "Name": "SUBNET_ID",
+                "Value": {
+                  "Ref": "PIVpcPrivateSubnet1SubnetB1D9B3A9"
+                }
+              },
+              {
+                "Name": "S3__USAGE_LOG_BUCKET",
+                "Value": {
+                  "Ref": "pipackageusagelogB671637B"
+                }
+              },
+              {
+                "Name": "S3__USAGE_SUMMARY_BUCKET",
+                "Value": {
+                  "Ref": "pipackageusagesummary3218D674"
+                }
+              },
+              {
+                "Name": "S3__USAGE_SNAPSHOT_BUCKET",
+                "Value": {
+                  "Ref": "pipackageusagesnapshotBA3F7D6D"
+                }
+              },
+              {
+                "Name": "S3__SUMMARY_BUCKET",
+                "Value": {
+                  "Ref": "pisummary540425EA"
+                }
+              }
+            ],
+            "Essential": true,
+            "Image": "public.ecr.aws/f8b3w7z4/pilabapp-pisummarytaskdocker-repository:latest",
+            "LogConfiguration": {
+              "LogDriver": "awslogs",
+              "Options": {
+                "awslogs-group": {
+                  "Ref": "S3SummaryTaskS3SummaryTaskContainerLogGroupE5B98A9C"
+                },
+                "awslogs-stream-prefix": "PIS3SummaryTask",
+                "awslogs-region": {
+                  "Ref": "AWS::Region"
+                }
+              }
+            },
+            "Name": "S3SummaryTaskContainer",
+            "Secrets": [
+              {
+                "Name": "SFDCSECRET",
+                "ValueFrom": {
+                  "Ref": "TemplatedSecret3D98B577"
+                }
+              }
+            ]
+          }
+        ],
+        "Cpu": "1024",
+        "ExecutionRoleArn": {
+          "Fn::GetAtt": [
+            "S3SummaryTaskExecutionRoleE93C184F",
+            "Arn"
+          ]
+        },
+        "Family": "PicdkStackS3SummaryTaskF8311934",
+        "Memory": "4096",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": [
+          "FARGATE"
+        ],
+        "TaskRoleArn": {
+          "Fn::GetAtt": [
+            "PIAppTaskRole722ACC80",
+            "Arn"
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/S3SummaryTask/Resource"
+      }
+    },
+    "S3SummaryTaskS3SummaryTaskContainerLogGroupE5B98A9C": {
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/S3SummaryTask/S3SummaryTaskContainer/LogGroup/Resource"
+      }
+    },
+    "S3SummaryTaskExecutionRoleE93C184F": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ecs-tasks.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/S3SummaryTask/ExecutionRole/Resource"
+      }
+    },
+    "S3SummaryTaskExecutionRoleDefaultPolicy15E83931": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "S3SummaryTaskS3SummaryTaskContainerLogGroupE5B98A9C",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": [
+                "secretsmanager:GetSecretValue",
+                "secretsmanager:DescribeSecret"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Ref": "TemplatedSecret3D98B577"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "S3SummaryTaskExecutionRoleDefaultPolicy15E83931",
+        "Roles": [
+          {
+            "Ref": "S3SummaryTaskExecutionRoleE93C184F"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/S3SummaryTask/ExecutionRole/DefaultPolicy/Resource"
+      }
+    },
+    "S3SummaryTaskEventsRole9F0A8A6E": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "events.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/S3SummaryTask/EventsRole/Resource"
+      }
+    },
+    "S3SummaryTaskEventsRoleDefaultPolicy0C1C0C6E": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "ecs:RunTask",
+              "Condition": {
+                "ArnEquals": {
+                  "ecs:cluster": {
+                    "Fn::GetAtt": [
+                      "PiCluster1A71287C",
+                      "Arn"
+                    ]
+                  }
+                }
+              },
+              "Effect": "Allow",
+              "Resource": {
+                "Ref": "S3SummaryTask99007529"
+              }
+            },
+            {
+              "Action": "iam:PassRole",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "S3SummaryTaskExecutionRoleE93C184F",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": "iam:PassRole",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "PIAppTaskRole722ACC80",
+                  "Arn"
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "S3SummaryTaskEventsRoleDefaultPolicy0C1C0C6E",
+        "Roles": [
+          {
+            "Ref": "S3SummaryTaskEventsRole9F0A8A6E"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/S3SummaryTask/EventsRole/DefaultPolicy/Resource"
+      }
+    },
+    "S3SummaryTaskSecurityGroup1A6FABA2": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "PicdkStack/S3SummaryTask/SecurityGroup",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1"
+          }
+        ],
+        "VpcId": {
+          "Ref": "PIVpc1CF2D9B3"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/S3SummaryTask/SecurityGroup/Resource"
+      }
+    },
+    "summaryScheduleRuleF63B4DAB": {
+      "Type": "AWS::Events::Rule",
+      "Properties": {
+        "ScheduleExpression": "rate(1 day)",
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Fn::GetAtt": [
+                "PiCluster1A71287C",
+                "Arn"
+              ]
+            },
+            "EcsParameters": {
+              "LaunchType": "FARGATE",
+              "NetworkConfiguration": {
+                "AwsVpcConfiguration": {
+                  "AssignPublicIp": "DISABLED",
+                  "SecurityGroups": [
+                    {
+                      "Fn::GetAtt": [
+                        "S3SummaryTaskSecurityGroup1A6FABA2",
+                        "GroupId"
+                      ]
+                    }
+                  ],
+                  "Subnets": [
+                    {
+                      "Ref": "PIVpcPrivateSubnet1SubnetB1D9B3A9"
+                    }
+                  ]
+                }
+              },
+              "TaskCount": 1,
+              "TaskDefinitionArn": {
+                "Ref": "S3SummaryTask99007529"
+              }
+            },
+            "Id": "Target0",
+            "Input": "{}",
+            "RoleArn": {
+              "Fn::GetAtt": [
+                "S3SummaryTaskEventsRole9F0A8A6E",
+                "Arn"
+              ]
+            }
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/summaryScheduleRule/Resource"
+      }
+    },
+    "piathenaresoutD99D1E66": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true
+        },
+        "VersioningConfiguration": {
+          "Status": "Enabled"
+        }
+      },
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/pi-athena_res-out/Resource"
+      }
+    },
+    "piappathenaworkgroup": {
+      "Type": "AWS::Athena::WorkGroup",
+      "Properties": {
+        "Name": "PIAppWorkgroup",
+        "Description": "PIApp WorkGroup",
+        "State": "ENABLED",
+        "WorkGroupConfiguration": {
+          "RequesterPaysEnabled": true,
+          "ResultConfiguration": {
+            "OutputLocation": {
+              "Fn::Join": [
+                "",
+                [
+                  "s3://",
+                  {
+                    "Ref": "piathenaresoutD99D1E66"
+                  },
+                  "/athena/results/"
+                ]
+              ]
+            }
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/piapp-athena-workgroup"
+      }
+    },
+    "PiDatabase41674200": {
+      "Type": "AWS::Glue::Database",
+      "Properties": {
+        "CatalogId": {
+          "Ref": "AWS::AccountId"
+        },
+        "DatabaseInput": {
+          "Name": "piapp_database"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/PiDatabase/Resource"
+      }
+    },
+    "PiLogTable847C38D7": {
+      "Type": "AWS::Glue::Table",
+      "Properties": {
+        "CatalogId": {
+          "Ref": "AWS::AccountId"
+        },
+        "DatabaseName": {
+          "Ref": "PiDatabase41674200"
+        },
+        "TableInput": {
+          "Description": "piapp_log_table generated by CDK",
+          "Name": "piapp_log_table",
+          "Parameters": {
+            "classification": "parquet",
+            "has_encrypted_data": false
+          },
+          "StorageDescriptor": {
+            "Columns": [
+              {
+                "Name": "timestamp_derived",
+                "Type": "string"
+              },
+              {
+                "Name": "log_record_type",
+                "Type": "string"
+              },
+              {
+                "Name": "request_id",
+                "Type": "string"
+              },
+              {
+                "Name": "organization_id",
+                "Type": "string"
+              },
+              {
+                "Name": "organization_name",
+                "Type": "string"
+              },
+              {
+                "Name": "organization_status",
+                "Type": "string"
+              },
+              {
+                "Name": "organization_edition",
+                "Type": "string"
+              },
+              {
+                "Name": "organization_country_code",
+                "Type": "string"
+              },
+              {
+                "Name": "organization_language_locale",
+                "Type": "string"
+              },
+              {
+                "Name": "organization_time_zone",
+                "Type": "string"
+              },
+              {
+                "Name": "organization_instance",
+                "Type": "string"
+              },
+              {
+                "Name": "organization_type",
+                "Type": "string"
+              },
+              {
+                "Name": "cloned_from_organization_id",
+                "Type": "string"
+              },
+              {
+                "Name": "user_id_token",
+                "Type": "string"
+              },
+              {
+                "Name": "url",
+                "Type": "string"
+              },
+              {
+                "Name": "package_id",
+                "Type": "string"
+              },
+              {
+                "Name": "package_version_id",
+                "Type": "string"
+              },
+              {
+                "Name": "managed_package_namespace",
+                "Type": "string"
+              },
+              {
+                "Name": "custom_entity",
+                "Type": "string"
+              },
+              {
+                "Name": "custom_entity_type",
+                "Type": "string"
+              },
+              {
+                "Name": "operation_type",
+                "Type": "string"
+              },
+              {
+                "Name": "operation_count",
+                "Type": "double"
+              },
+              {
+                "Name": "request_status",
+                "Type": "string"
+              },
+              {
+                "Name": "referrer_uri",
+                "Type": "string"
+              },
+              {
+                "Name": "session_key",
+                "Type": "string"
+              },
+              {
+                "Name": "login_key",
+                "Type": "string"
+              },
+              {
+                "Name": "user_agent",
+                "Type": "string"
+              },
+              {
+                "Name": "user_country_code",
+                "Type": "string"
+              },
+              {
+                "Name": "user_time_zone",
+                "Type": "string"
+              },
+              {
+                "Name": "api_type",
+                "Type": "string"
+              },
+              {
+                "Name": "api_version",
+                "Type": "string"
+              },
+              {
+                "Name": "rows_processed",
+                "Type": "double"
+              },
+              {
+                "Name": "request_size",
+                "Type": "double"
+              },
+              {
+                "Name": "response_size",
+                "Type": "double"
+              },
+              {
+                "Name": "http_method",
+                "Type": "string"
+              },
+              {
+                "Name": "http_status_code",
+                "Type": "string"
+              },
+              {
+                "Name": "num_fields",
+                "Type": "double"
+              },
+              {
+                "Name": "run_time",
+                "Type": "double"
+              },
+              {
+                "Name": "cpu_time",
+                "Type": "double"
+              },
+              {
+                "Name": "db_total_time",
+                "Type": "double"
+              },
+              {
+                "Name": "db_blocks",
+                "Type": "double"
+              },
+              {
+                "Name": "db_cpu_time",
+                "Type": "double"
+              },
+              {
+                "Name": "visualforce_page_exec_time",
+                "Type": "double"
+              },
+              {
+                "Name": "app_name",
+                "Type": "string"
+              },
+              {
+                "Name": "page_app_name",
+                "Type": "string"
+              },
+              {
+                "Name": "page_context",
+                "Type": "string"
+              },
+              {
+                "Name": "ui_event_source",
+                "Type": "string"
+              },
+              {
+                "Name": "ui_event_type",
+                "Type": "string"
+              },
+              {
+                "Name": "ui_event_sequence_num",
+                "Type": "double"
+              },
+              {
+                "Name": "target_ui_element",
+                "Type": "string"
+              },
+              {
+                "Name": "parent_ui_element",
+                "Type": "string"
+              },
+              {
+                "Name": "page_url",
+                "Type": "string"
+              },
+              {
+                "Name": "prevpage_url",
+                "Type": "string"
+              },
+              {
+                "Name": "class_name",
+                "Type": "string"
+              },
+              {
+                "Name": "method_name",
+                "Type": "string"
+              },
+              {
+                "Name": "event",
+                "Type": "string"
+              },
+              {
+                "Name": "event_subscriber",
+                "Type": "string"
+              },
+              {
+                "Name": "event_count",
+                "Type": "double"
+              },
+              {
+                "Name": "apex_exec_time",
+                "Type": "double"
+              },
+              {
+                "Name": "apex_callout_time",
+                "Type": "double"
+              },
+              {
+                "Name": "entry_point",
+                "Type": "string"
+              },
+              {
+                "Name": "quiddity",
+                "Type": "string"
+              },
+              {
+                "Name": "num_soql_queries",
+                "Type": "double"
+              },
+              {
+                "Name": "stack_trace",
+                "Type": "string"
+              },
+              {
+                "Name": "dt_processed_on",
+                "Type": "date"
+              },
+              {
+                "Name": "dt_processed_for",
+                "Type": "date"
+              }
+            ],
+            "Compressed": false,
+            "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+            "Location": {
+              "Fn::Join": [
+                "",
+                [
+                  "s3://",
+                  {
+                    "Ref": "pipackageusagelogB671637B"
+                  },
+                  "/app"
+                ]
+              ]
+            },
+            "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+            "SerdeInfo": {
+              "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+            },
+            "StoredAsSubDirectories": true
+          },
+          "TableType": "EXTERNAL_TABLE"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/PiLogTable/Table"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Analytics": "v2:deflate64:H4sIAAAAAAAAE12SwW7CMAyGn2X3EMqm3cfKhpCmrSoTO7vBlNA2QYkDQlXefUlb2mknf/7ruL+dLPgiSXjy8AJXOxP7at4KbZC3WwJRsVQrS8YJYjla7YxAlh7Ul6Ozo0h/1VC7lyS18iz2ai0Kg2QbUFCiCR27PFb25Jl94u2rE1Wv9uQZikfe7s4iarssZZkraim2rlDD6ZFy7Qi/oahx0idtaa0WEqKjsTjC2yaL4RNoDYRXuLHMyEvAqfFGEZrA94LeyZAtKazm2KAiFgZxRtJtbbQ7D5NNQhzF8jatnQ3tuhUN+A6mhGjTVis8SCXvJv8rWhFIhWbSPJPQ8DbX/dBdzHRYUOeyJ89qXYY/f+hydHbnYOoSrIevuRtahBiujI6ogIf8R5uqP1bWLryEFRAUYLvakcetd+C9Z0rvkZ/s/LJ45glfPJyslDPjFMkGed7HXyvHs5ZtAgAA"
+      },
+      "Metadata": {
+        "aws:cdk:path": "PicdkStack/CDKMetadata/Default"
+      },
+      "Condition": "CDKMetadataAvailable"
+    }
+  },
+  "Outputs": {
+    "TaskRole": {
+      "Value": {
+        "Fn::GetAtt": [
+          "PIAppTaskRole722ACC80",
+          "Arn"
+        ]
+      }
+    }
+  },
+  "Conditions": {
+    "CDKMetadataAvailable": {
+      "Fn::Or": [
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "af-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ca-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-northwest-1"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-3"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "me-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "sa-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-2"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-2"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
